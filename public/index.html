@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Buscador de Motores de IA — encontre a IA certa para a sua tarefa</title>
+<meta name="description" content="Um guia que ajuda a escolher o melhor motor de IA para qualquer tarefa — da Anthropic, OpenAI e Google a modelos open-source no GitHub, incluindo projetos de nicho para agricultura, construção, transporte e mais." />
+<style>
+  :root{
+    --bg:#f0eee6;--surface:#faf9f5;--surface-2:#fff;--ink:#1f1e1c;--ink-soft:#6b6862;
+    --line:#e4e1d6;--clay:#d97757;--clay-dark:#c15f3c;--open:#4b7a6b;--prop:#7a6cc4;--sector:#3f72a6;
+    --radius:14px;--maxw:880px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased;
+    font-family:ui-sans-serif,-apple-system,"Segoe UI",Inter,Helvetica,Arial,sans-serif}
+  a{color:var(--clay-dark)}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+  header.top{padding:22px 0 8px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:34px;height:34px;border-radius:9px;background:var(--clay);display:grid;place-items:center;color:#fff;font-weight:700;font-size:18px}
+  .brand h1{font-size:19px;margin:0;font-weight:650;letter-spacing:-.01em}
+  .brand p{margin:0;font-size:13px;color:var(--ink-soft)}
+  .hero{text-align:center;padding:34px 0 10px}
+  .hero h2{font-size:30px;margin:0 0 8px;letter-spacing:-.02em;font-weight:650}
+  .hero p{color:var(--ink-soft);margin:0 auto;max-width:580px;font-size:15px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:22px 0 6px}
+  .chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 13px;font-size:13px;cursor:pointer;color:var(--ink);transition:all .15s}
+  .chip:hover{border-color:var(--clay);background:#fff}
+  .chat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);margin:18px 0 10px;overflow:hidden}
+  .messages{padding:18px;min-height:220px;max-height:52vh;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
+  .msg{display:flex;gap:10px}
+  .msg .av{width:28px;height:28px;border-radius:7px;flex:0 0 28px;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff}
+  .msg.user .av{background:var(--ink)}
+  .msg.bot .av{background:var(--clay)}
+  .bubble{background:var(--surface-2);border:1px solid var(--line);border-radius:11px;padding:11px 14px;font-size:14.5px;white-space:pre-wrap}
+  .msg.user .bubble{background:#efece2}
+  .bubble strong{font-weight:650}
+  .bubble code{background:#efece2;padding:1px 6px;border-radius:5px;font-size:13px}
+  .composer{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line);background:var(--surface-2)}
+  .composer input{flex:1;border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:14.5px;background:#fff;color:var(--ink);outline:none}
+  .composer input:focus{border-color:var(--clay)}
+  .composer button{background:var(--clay);color:#fff;border:0;border-radius:10px;padding:0 18px;font-weight:600;cursor:pointer;font-size:14.5px}
+  .composer button:hover{background:var(--clay-dark)}
+  .mode{text-align:center;font-size:12px;color:var(--ink-soft);margin:0 0 26px}
+  .section-title{font-size:14px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);margin:30px 0 6px}
+  .section-sub{font-size:13.5px;color:var(--ink-soft);margin:0 0 14px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin:8px 0 40px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column}
+  .card .h{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .card h3{margin:0;font-size:16px}
+  .card .vendor{font-size:12px;color:var(--ink-soft)}
+  .badge{font-size:11px;padding:3px 8px;border-radius:999px;font-weight:600;white-space:nowrap}
+  .badge.open{background:#e3efe9;color:var(--open)}
+  .badge.prop{background:#ece9f7;color:var(--prop)}
+  .badge.sector{background:#e1ebf5;color:var(--sector)}
+  .card .tag{font-size:13.5px;margin:9px 0;font-weight:550}
+  .card .desc{font-size:13px;color:var(--ink-soft);margin:0 0 10px}
+  .card ul{margin:0 0 10px;padding-left:17px;font-size:12.5px}
+  .card ul li{margin-bottom:3px}
+  .meta{font-size:12px;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:9px;margin-top:auto}
+  .meta span{display:block}
+  .card a.use{margin-top:9px;font-size:13px;font-weight:600;color:var(--clay-dark);text-decoration:none}
+  .card a.use:hover{text-decoration:underline}
+  .search-q{font-size:12px;background:#efece2;border-radius:6px;padding:6px 8px;margin-top:8px;font-family:ui-monospace,monospace;color:#33312c;word-break:break-word}
+  footer{text-align:center;color:var(--ink-soft);font-size:12px;padding:20px 0 40px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap brand">
+    <div class="logo">✷</div>
+    <div><h1>Buscador de Motores de IA</h1><p>Encontre a IA certa para qualquer tarefa</p></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h2>Qual IA deve usar realmente?</h2>
+    <p>Descreva a sua tarefa. Eu encontro o melhor motor — da Anthropic, OpenAI e Google até modelos open-source que pode alojar no seu servidor — e digo-lhe porquê e como começar. Inclui também projetos de nicho no GitHub para áreas como <strong>agricultura, construção, transporte, saúde e clima</strong>.</p>
+  </section>
+
+  <div class="chips" id="chips"></div>
+
+  <div class="chat">
+    <div class="messages" id="messages"></div>
+    <form class="composer" id="composer">
+      <input id="input" placeholder="ex.: quero detetar doenças nas minhas plantações…" aria-label="Descreva a sua tarefa" autocomplete="off" />
+      <button type="submit">Enviar</button>
+    </form>
+  </div>
+  <p class="mode">A funcionar 100% no seu navegador · motor de recomendação inteligente · sem login, sem servidor</p>
+
+  <h3 class="section-title">Motores generalistas</h3>
+  <p class="section-sub">Os grandes modelos de IA de uso geral (dados de junho de 2026).</p>
+  <div class="cards" id="cards"></div>
+
+  <h3 class="section-title">Motores de nicho no GitHub (por setor)</h3>
+  <p class="section-sub">Projetos open-source reais para tarefas especializadas. Cada cartão inclui uma sugestão de pesquisa para encontrar mais projetos semelhantes no GitHub.</p>
+  <div class="cards" id="sector-cards"></div>
+</main>
+
+<footer class="wrap">Buscador de Motores de IA · dados refletem o estado da arte em junho de 2026 · confirme sempre preços e limites no site de cada fornecedor.</footer>
+
+<script>
+/* ---------- Categorias de tarefa ---------- */
+const TASKS = [
+  {key:"coding",label:"Programação e software"},{key:"writing",label:"Escrita e criatividade"},
+  {key:"reasoning",label:"Raciocínio e matemática"},{key:"research",label:"Pesquisa e análise"},
+  {key:"data",label:"Dados e folhas de cálculo"},{key:"agentic",label:"Agentes e automação"},
+  {key:"longContext",label:"Documentos muito longos"},{key:"multimodal",label:"Imagem, áudio e vídeo"},
+  {key:"realtime",label:"Informação em tempo real"},{key:"local",label:"Local / privado"},
+  {key:"budget",label:"Baixo custo / grande volume"}
+];
+
+/* ---------- Catálogo de motores generalistas ---------- */
+const ENGINES = [
+  {id:"claude-opus",name:"Claude Opus 4.8",vendor:"Anthropic",type:"proprietary",license:"API comercial",
+   tagline:"Melhor modelo no geral e líder em programação.",
+   description:"O topo de gama da Anthropic. É o nº1 no Índice de Inteligência da Artificial Analysis (61,4) e lidera o SWE-bench Verified com 88,6%. Produz o texto mais natural entre os modelos de fronteira; alimenta o Cursor, o Windsurf e o Claude Code.",
+   strengths:["Topo em programação e agentes","Escrita longa mais natural","Raciocínio forte e cuidadoso","Excelente a seguir instruções"],
+   contextWindow:"200K tokens (1M em beta)",pricing:"$$$ — premium",link:"https://www.anthropic.com/claude",
+   scores:{coding:98,writing:95,reasoning:93,research:92,data:88,agentic:97,longContext:88,multimodal:86,realtime:40,local:0,budget:35}},
+  {id:"gpt",name:"GPT-5.5",vendor:"OpenAI",type:"proprietary",license:"API comercial",
+   tagline:"Melhor escritor criativo e raciocínio abstrato.",
+   description:"O topo de gama da OpenAI. Lidera o teste de raciocínio abstrato ARC-AGI-2 (85,0%) e domina a escrita criativa desde o GPT-5.1. Ecossistema mais alargado e forte suporte multimodal.",
+   strengths:["Melhor escrita criativa","Raciocínio abstrato líder","Enorme ecossistema e integrações","Forte multimodal"],
+   contextWindow:"256K tokens",pricing:"$$$ — premium",link:"https://platform.openai.com",
+   scores:{coding:86,writing:98,reasoning:95,research:90,data:87,agentic:88,longContext:84,multimodal:92,realtime:55,local:0,budget:38}},
+  {id:"gemini",name:"Gemini 3.1 Pro",vendor:"Google",type:"proprietary",license:"API comercial",
+   tagline:"Líder em raciocínio com integração Google.",
+   description:"O topo de gama da Google DeepMind. Lidera por pouco o GPQA Diamond de raciocínio científico (94,3%), com compreensão nativa de imagem/áudio/vídeo e forte integração no ecossistema Google.",
+   strengths:["Topo em raciocínio científico","Compreende áudio e vídeo nativamente","Integração Google","Camada gratuita generosa"],
+   contextWindow:"1M–2M tokens",pricing:"$$ — competitivo, tem plano grátis",link:"https://ai.google.dev",
+   scores:{coding:84,writing:88,reasoning:96,research:93,data:90,agentic:85,longContext:95,multimodal:96,realtime:70,local:0,budget:60}},
+  {id:"grok",name:"Grok 4.3",vendor:"xAI",type:"proprietary",license:"API comercial",
+   tagline:"Dados em tempo real e voz menos filtrada.",
+   description:"O modelo da xAI com acesso único a dados em direto do X (Twitter) e contexto de 1M tokens via Grok 4 Fast. Forte em atualidade e conversa direta.",
+   strengths:["Dados sociais/web em tempo real","Contexto grande (variante Fast)","Tom de conversa direto"],
+   contextWindow:"Até 1M tokens (Fast)",pricing:"$$ — gama média",link:"https://x.ai",
+   scores:{coding:78,writing:82,reasoning:84,research:88,data:80,agentic:80,longContext:90,multimodal:80,realtime:98,local:0,budget:55}},
+  {id:"deepseek",name:"DeepSeek V4 Pro",vendor:"DeepSeek",type:"open-source",license:"MIT",
+   tagline:"Melhor modelo open-source — programação de fronteira, grátis para alojar.",
+   description:"O nº1 dos modelos de pesos abertos (Índice AA 52) e de nível de fronteira em programação e agentes. Licença MIT: pode afinar e usar comercialmente sem royalties. Pesos no Hugging Face.",
+   strengths:["Melhor programação open-source","Licença MIT — liberdade total","Alojável para privacidade","Custo muito baixo via API"],
+   contextWindow:"128K tokens",pricing:"$ — API barata ou grátis self-hosted",link:"https://github.com/deepseek-ai",
+   scores:{coding:92,writing:80,reasoning:88,research:82,data:85,agentic:90,longContext:82,multimodal:60,realtime:30,local:90,budget:95}},
+  {id:"kimi",name:"Kimi K2.6",vendor:"Moonshot AI",type:"open-source",license:"MIT modificada",
+   tagline:"Modelo aberto com a pontuação mais alta para apps avançadas.",
+   description:"O modelo da Moonshot AI está à frente dos outros líderes abertos (Índice AA 54). Excelente para programação e agentes avançados. Pesos no Hugging Face.",
+   strengths:["Maior inteligência open-weight","Forte em agentes e programação","Alojável no seu servidor"],
+   contextWindow:"256K tokens",pricing:"$ — API barata ou self-hosted",link:"https://github.com/MoonshotAI",
+   scores:{coding:90,writing:82,reasoning:89,research:83,data:84,agentic:91,longContext:88,multimodal:62,realtime:30,local:85,budget:92}},
+  {id:"qwen",name:"Qwen 3.6",vendor:"Alibaba",type:"open-source",license:"Apache 2.0",
+   tagline:"Modelo aberto versátil com a licença mais permissiva.",
+   description:"O nº2 dos modelos abertos e a escolha de licença mais segura (Apache 2.0). Ótimo polivalente para conversa, código e multilíngue, em tamanhos do mais pequeno ao maior.",
+   strengths:["Apache 2.0 — bom para comercial","Forte multilíngue","Vários tamanhos","Ótimo polivalente"],
+   contextWindow:"128K–1M tokens",pricing:"$ — API barata ou grátis self-hosted",link:"https://github.com/QwenLM",
+   scores:{coding:86,writing:83,reasoning:86,research:84,data:85,agentic:86,longContext:88,multimodal:78,realtime:30,local:88,budget:93}},
+  {id:"llama",name:"Llama 4 (Maverick / Scout)",vendor:"Meta",type:"open-source",license:"Licença Comunitária Llama",
+   tagline:"Melhor suporte de ecossistema e contexto ultra-longo.",
+   description:"A família aberta da Meta. O Maverick é o modelo aberto polivalente mais forte (MMLU 85,5%); o Scout oferece contexto de 10M tokens. Comunidade e ferramentas enormes.",
+   strengths:["Comunidade e ferramentas enormes","Scout: contexto de 10M tokens","Forte polivalente","Suportado em todo o lado"],
+   contextWindow:"Até 10M tokens (Scout)",pricing:"$ — grátis self-hosted",link:"https://github.com/meta-llama",
+   scores:{coding:82,writing:84,reasoning:84,research:83,data:82,agentic:82,longContext:98,multimodal:80,realtime:30,local:90,budget:90}},
+  {id:"gemma",name:"Gemma 4 26B",vendor:"Google",type:"open-source",license:"Licença Gemma",
+   tagline:"O modelo mais prático para correr na sua própria máquina.",
+   description:"A família aberta e leve da Google. A variante 26B A4B é o modelo local mais prático para o dia a dia — rápido e corre numa única GPU de consumidor.",
+   strengths:["Corre em hardware de consumidor","Rápido e eficiente","Boa qualidade para o tamanho","Configuração local fácil"],
+   contextWindow:"128K tokens",pricing:"Grátis — self-hosted",link:"https://github.com/google-deepmind/gemma",
+   scores:{coding:72,writing:78,reasoning:74,research:74,data:72,agentic:70,longContext:70,multimodal:68,realtime:25,local:98,budget:96}},
+  {id:"mistral",name:"Mistral Medium 3.5",vendor:"Mistral AI",type:"open-source",license:"Apache 2.0 (variantes abertas)",
+   tagline:"Modelo europeu eficiente com forte privacidade.",
+   description:"O modelo equilibrado da Mistral AI. Opção eficiente e alojada na UE, com bom desempenho geral — ideal para residência de dados europeia.",
+   strengths:["Eficiente e rápido","Residência de dados na UE","Licenciamento aberto","Boa relação custo/desempenho"],
+   contextWindow:"128K tokens",pricing:"$ — competitivo",link:"https://github.com/mistralai",
+   scores:{coding:80,writing:81,reasoning:80,research:81,data:80,agentic:80,longContext:78,multimodal:70,realtime:30,local:84,budget:88}}
+];
+
+/* ---------- Catálogo de motores de nicho (projetos GitHub reais) ---------- */
+const SECTORS = [
+  {id:"agri",sector:"Agricultura",name:"PlantVillage / Deteção de doenças em plantas",
+   repo:"https://github.com/arpit0891/Plant-Disease-Detection-Web-application",
+   description:"Modelos de visão (CNN/ResNet/MobileNet) treinados no dataset PlantVillage (54.309 imagens, 14 culturas) para identificar doenças em folhas a partir de fotos. Atinge ~99% de precisão e corre até em dispositivos móveis.",
+   use:["Detetar doenças em culturas por foto","Apps de campo para agricultores","Treinar com o seu próprio dataset"],
+   search:'site GitHub: "plant disease detection" OR PlantVillage language:Python',
+   keywords:["agricult","planta","plantação","cultura","colheita","lavoura","folha","doença das plantas","fazenda","campo","crop","farm"]},
+  {id:"geo",sector:"Geoespacial / Satélite",name:"TorchGeo (Microsoft)",
+   repo:"https://github.com/microsoft/torchgeo",
+   description:"Biblioteca PyTorch para dados geoespaciais. É a primeira a oferecer modelos pré-treinados para imagens de satélite multiespectrais (ex.: Sentinel-2), com data loaders e samplers para deteção remota.",
+   use:["Classificar uso do solo por satélite","Monitorizar florestas/águas","Transferência de aprendizagem com poucos rótulos"],
+   search:'GitHub topics: remote-sensing satellite deep-learning · ver também opengeos/segment-geospatial',
+   keywords:["satélite","satelite","geoespacial","sensoriamento","mapa","território","floresta","uso do solo","sentinel","remote sensing","geo"]},
+  {id:"transport",sector:"Transporte / Condução autónoma",name:"openpilot (comma.ai) + CARLA",
+   repo:"https://github.com/commaai/openpilot",
+   description:"openpilot é um sistema open-source de assistência à condução que funciona em centenas de modelos de carros. O simulador CARLA (carla-simulator/carla) permite treinar e validar condução autónoma com aprendizagem por reforço antes da estrada.",
+   use:["Assistência à condução (ADAS)","Treinar agentes de condução em simulação","Investigação em mobilidade"],
+   search:'GitHub: "autonomous driving" OR self-driving · carla-simulator/carla',
+   keywords:["transporte","condução","carro","veículo","autónomo","autonomo","trânsito","transito","mobilidade","frota","driving","vehicle","car"]},
+  {id:"construction",sector:"Construção / Engenharia civil",name:"Awesome-Crack-Detection + CODEBRIM",
+   repo:"https://github.com/nantonzhang/Awesome-Crack-Detection",
+   description:"Coleção curada de modelos de deep learning para deteção de fissuras em betão e alvenaria (datasets CODEBRIM, MCrack1300). Usado para inspeção de pontes e edifícios, com integração possível em modelos BIM.",
+   use:["Detetar fissuras em betão por imagem","Inspeção de pontes/edifícios com drone","Mapear defeitos para BIM"],
+   search:'GitHub: "crack detection" OR "defect detection" construction language:Python',
+   keywords:["construção","construcao","obra","edifício","edificio","betão","betao","concreto","fissura","rachadura","estrutura","ponte","civil","bim"]},
+  {id:"health",sector:"Saúde / Imagiologia médica",name:"MONAI + nnU-Net",
+   repo:"https://github.com/Project-MONAI/MONAI",
+   description:"MONAI é a framework PyTorch de referência para IA em imagiologia médica. O nnU-Net (MIC-DKFZ/nnUNet) autoconfigura-se para segmentação de imagem médica de topo (TAC, RM). Padrão em investigação clínica.",
+   use:["Segmentar órgãos/tumores em TAC e RM","Etiquetagem assistida de imagens 3D","Pipelines de treino clínico"],
+   search:'GitHub: Project-MONAI/MONAI · MIC-DKFZ/nnUNet · topic: medical-imaging',
+   keywords:["saúde","saude","médic","medic","hospital","tumor","raio-x","ressonância","ressonancia","clínic","clinic","imagiologia","radiolog","health","scan"]},
+  {id:"weather",sector:"Clima / Meteorologia",name:"GraphCast (Google DeepMind)",
+   repo:"https://github.com/google-deepmind/graphcast",
+   description:"GraphCast é o sistema de previsão meteorológica global a 10 dias mais preciso do mundo, baseado em redes neuronais de grafos. Mais rápido e preciso que os modelos físicos tradicionais. Código aberto.",
+   use:["Previsão meteorológica a 10 dias","Antecipar eventos extremos","Investigação climática"],
+   search:'GitHub: google-deepmind/graphcast · ecmwf-lab/ai-models · topic: weather-forecasting',
+   keywords:["clima","tempo","meteorolog","previsão do tempo","previsao","chuva","temperatura","furacão","furacao","tempestade","weather","climate"]}
+];
+
+/* ---------- Deteção de tarefas (PT + EN) ---------- */
+const KEYWORDS = {
+  coding:["program","código","codigo","code","depurar","debug","software","app","aplicação","script","api","função","funcao","developer"],
+  writing:["escrev","escrita","texto","redação","redacao","artigo","blog","história","historia","romance","criativ","conteúdo","conteudo","copy"],
+  reasoning:["raciocínio","raciocinio","lógica","logica","matemática","matematica","cálculo","calculo","ciência","ciencia","física","fisica","resolver","prova"],
+  research:["pesquisa","investigação","investigacao","resumo","resumir","análise","analise","relatório","relatorio","fontes","sintetizar","documento"],
+  data:["dados","folha de cálculo","folha de calculo","excel","csv","tabela","análise de dados","sql","extrair","estruturad"],
+  agentic:["agente","automatizar","automação","automacao","fluxo","ferramenta","autónomo","autonomo","pipeline"],
+  longContext:["longo","livro","enorme","documento grande","código grande","contexto","manuscrito","páginas","paginas"],
+  multimodal:["imagem","foto","fotografia","áudio","audio","vídeo","video","voz","visão","visao","multimodal"],
+  realtime:["tempo real","atual","atualidade","notícias","noticias","último","ultimo","ao vivo","hoje","twitter","tendência","tendencia"],
+  local:["local","alojar","self-host","privado","offline","privacidade","próprio servidor","proprio servidor","gpu","portátil","portatil"],
+  budget:["barato","orçamento","orcamento","custo","baixo custo","acessível","acessivel","grátis","gratis","grande volume","escala","preço","preco"]
+};
+function detectTasks(msg){
+  const m=msg.toLowerCase();
+  return TASKS.map(t=>t.key).filter(k=>KEYWORDS[k].some(kw=>m.includes(kw)));
+}
+function detectSectors(msg){
+  const m=msg.toLowerCase();
+  return SECTORS.filter(s=>s.keywords.some(kw=>m.includes(kw)));
+}
+function recommend(tasks,limit=3){
+  const active=tasks.length?tasks:["reasoning","writing","coding"];
+  return ENGINES.map(e=>{
+    const avg=active.reduce((s,t)=>s+e.scores[t],0)/active.length;
+    const best=[...active].sort((a,b)=>e.scores[b]-e.scores[a])[0];
+    const lbl=(TASKS.find(t=>t.key===best)||{}).label||best;
+    return {e,score:Math.round(avg),why:`Pontua ${e.scores[best]}/100 em ${lbl.toLowerCase()}. ${e.tagline}`};
+  }).sort((a,b)=>b.score-a.score).slice(0,limit);
+}
+function reply(msg){
+  const sectors=detectSectors(msg);
+  const tasks=detectTasks(msg);
+  const out=[];
+
+  if(sectors.length){
+    out.push(`Detetei uma tarefa de **${sectors.map(s=>s.sector).join(", ")}**. Há projetos open-source no GitHub feitos para isto:`);
+    out.push("");
+    sectors.forEach((s,i)=>{
+      out.push(`${i+1}. **${s.name}** — ${s.description}`);
+      out.push(`   ↳ Repo: ${s.repo}`);
+      out.push(`   ↳ Pesquisar no GitHub: \`${s.search}\``);
+    });
+    out.push("");
+    out.push("E para a parte de conversa/raciocínio que ligue tudo, um modelo generalista ajuda:");
+  } else {
+    const labels=tasks.map(t=>(TASKS.find(x=>x.key===t)||{}).label).filter(Boolean);
+    out.push(labels.length
+      ? `Para **${labels.join(", ")}**, eis o que eu escolheria:`
+      : `Não consegui identificar a tarefa exata. Aqui ficam boas opções gerais. Diga-me mais (ex.: "detetar doenças nas plantas" ou "resumir PDFs longos em privado") para uma resposta mais precisa:`);
+  }
+
+  out.push("");
+  recommend(tasks).forEach((r,i)=>{
+    const tag=r.e.type==="open-source"?"open-source":"proprietário";
+    out.push(`${i+1}. **${r.e.name}** (${r.e.vendor}, ${tag}) — ${r.why}`);
+  });
+  return out.join("\n");
+}
+
+/* ---------- UI ---------- */
+const STARTERS=["Detetar doenças nas minhas plantações","Inspecionar fissuras em betão","Previsão do tempo a 10 dias","Programar e depurar código em Python","Correr uma IA offline no meu portátil","Modelo mais barato para grande volume"];
+const messagesEl=document.getElementById("messages");
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function fmt(t){return esc(t).replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>").replace(/`([^`]+)`/g,"<code>$1</code>");}
+function addMsg(role,text){
+  const d=document.createElement("div");d.className="msg "+(role==="user"?"user":"bot");
+  d.innerHTML=`<div class="av">${role==="user"?"Você":"✷"}</div><div class="bubble">${fmt(text)}</div>`;
+  messagesEl.appendChild(d);messagesEl.scrollTop=messagesEl.scrollHeight;
+}
+function send(text){
+  const c=(text||"").trim();if(!c)return;
+  addMsg("user",c);
+  setTimeout(()=>addMsg("bot",reply(c)),150);
+}
+document.getElementById("composer").addEventListener("submit",e=>{
+  e.preventDefault();const i=document.getElementById("input");send(i.value);i.value="";
+});
+const chips=document.getElementById("chips");
+STARTERS.forEach(s=>{const b=document.createElement("button");b.className="chip";b.textContent=s;b.onclick=()=>send(s);chips.appendChild(b);});
+
+const cards=document.getElementById("cards");
+ENGINES.forEach(e=>{
+  const d=document.createElement("div");d.className="card";
+  d.innerHTML=`<div class="h"><div><h3>${e.name}</h3><div class="vendor">${e.vendor}</div></div>
+    <span class="badge ${e.type==="open-source"?"open":"prop"}">${e.type==="open-source"?"Open source":"Proprietário"}</span></div>
+    <div class="tag">${e.tagline}</div><p class="desc">${e.description}</p>
+    <ul>${e.strengths.slice(0,4).map(s=>`<li>${s}</li>`).join("")}</ul>
+    <div class="meta"><span>Contexto: ${e.contextWindow}</span><span>Licença: ${e.license}</span><span>Preço: ${e.pricing}</span></div>
+    <a class="use" href="${e.link}" target="_blank" rel="noreferrer">Como usar / GitHub →</a>`;
+  cards.appendChild(d);
+});
+
+const sc=document.getElementById("sector-cards");
+SECTORS.forEach(s=>{
+  const d=document.createElement("div");d.className="card";
+  d.innerHTML=`<div class="h"><div><h3>${s.name}</h3><div class="vendor">${s.sector}</div></div>
+    <span class="badge sector">Nicho · GitHub</span></div>
+    <p class="desc">${s.description}</p>
+    <ul>${s.use.map(u=>`<li>${u}</li>`).join("")}</ul>
+    <div class="search-q">🔎 ${esc(s.search)}</div>
+    <a class="use" href="${s.repo}" target="_blank" rel="noreferrer">Abrir no GitHub →</a>`;
+  sc.appendChild(d);
+});
+
+addMsg("bot","Olá! Sou o Buscador de Motores de IA. Diga-me o que quer fazer — programar, escrever, pesquisar, ou algo específico como agricultura, construção, transporte, saúde ou clima — e eu recomendo o melhor motor de IA (incluindo projetos open-source no GitHub) e explico porquê. Qual é a tarefa?");
+</script>
+</body>
+</html>
